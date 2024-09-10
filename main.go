@@ -16,7 +16,10 @@ func main() {
 		command := strings.ToLower(parsedInput[0])
 		c, ok := cmds[command]
 		if ok {
-			c.Callback()
+			err := c.Callback()
+			if err != nil {
+				fmt.Printf("**Err**\n%v\n**End**\n", err)
+			}
 		} else {
 			fmt.Printf("Unknown command: %v\n", command)
 		}
