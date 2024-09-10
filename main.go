@@ -1,7 +1,25 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"pokedex/commands"
+	"strings"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	var input string
+	cmds := commands.GetCommands()
+	for {
+		fmt.Print("Pokedex > ")
+		fmt.Scanln(&input)
+		parsedInput := strings.Split(input, " ")
+		command := strings.ToLower(parsedInput[0])
+		c, ok := cmds[command]
+		if ok {
+			c.Callback()
+		} else {
+			fmt.Printf("Unknown command: %v\n", command)
+		}
+	}
 }
+
