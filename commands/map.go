@@ -5,11 +5,7 @@ import (
 	"pokedex/pokeapi"
 )
 
-var mapStepper pokeapi.MapStepper = pokeapi.MapStepper{
-	Count: 0,
-	Next:  nil,
-	Prev:  nil,
-}
+var mapStepper pokeapi.MapStepper = *pokeapi.NewMapStepper()
 
 func commandMap() error {
 	locations, err := mapStepper.GetMap()

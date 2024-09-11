@@ -6,13 +6,15 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"pokedex/internal/pokecache"
+	"time"
 )
 
 type MapStepper struct {
-	Count   int
-	Next    *string
-	Prev    *string
-	Results []LocationArea
+	Count int
+	Next  *string
+	Prev  *string
+	cache pokecache.Cache
 }
 
 type LocationArea struct {
@@ -22,12 +24,23 @@ type LocationArea struct {
 
 type locationAreaResponse struct {
 	Count    int            `json:"count"`
-	Next     *string         `json:"next"`
-	Previous *string         `json:"previous"`
+	Next     *string        `json:"next"`
+	Previous *string        `json:"previous"`
 	Results  []LocationArea `json:"results"`
 }
 
 var startURL string = "https://pokeapi.co/api/v2/location-area"
+
+func NewMapStepper() *MapStepper {
+	cacheDuration, _ := time.ParseDuration("5m")
+	c := MapStepper{
+		Count: 0,
+		Next:  &startURL,
+		Prev:  &startURL,
+		cache: *pokecache.NewCache(cacheDuration),
+	}
+	return &c
+}
 
 func (s *MapStepper) GetMap() ([]LocationArea, error) {
 	if s.Next != nil {
@@ -46,19 +59,22 @@ func (s *MapStepper) GetMapb() ([]LocationArea, error) {
 }
 
 func (s *MapStepper) getLocationAreas(url string) ([]LocationArea, error) {
-	res, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
+	body, ok := s.cache.Get(url)
+	if !ok {
+		res, err := http.Get(url)
+		if err != nil {
+			return nil, err
+		}
+		body, err = io.ReadAll(res.Body)
+		res.Body.Close()
+		if res.StatusCode > 299 {
+			return nil, errors.New(fmt.Sprintf("Error response from webserver:\nURL: %v\nCode: %v", url, res.StatusCode))
+		}
 
-	body, err := io.ReadAll(res.Body)
-	res.Body.Close()
-	if res.StatusCode > 299 {
-		return nil, errors.New(fmt.Sprintf("Error response from webserver:\nURL: %v\nCode: %v", url, res.StatusCode))
-	}
-
-	if err != nil {
-		return nil, err
+		if err != nil {
+			return nil, err
+		}
+		s.cache.Add(url, body)
 	}
 
 	var areas locationAreaResponse
@@ -70,7 +86,7 @@ func (s *MapStepper) getLocationAreas(url string) ([]LocationArea, error) {
 	return areas.Results, nil
 }
 
-func (s MapStepper) Print() {
+func (s *MapStepper) Print() {
 	var next, prev string
 	if s.Next != nil {
 		next = *s.Next
