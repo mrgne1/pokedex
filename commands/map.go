@@ -7,7 +7,7 @@ import (
 
 var mapStepper pokeapi.MapStepper = *pokeapi.NewMapStepper()
 
-func commandMap() error {
+func commandMap(_ ...string) error {
 	locations, err := mapStepper.GetMap()
 	if err != nil {
 		return err
@@ -19,7 +19,7 @@ func commandMap() error {
 	return nil
 }
 
-func commandMapb() error {
+func commandMapb(_ ...string) error {
 	locations, err := mapStepper.GetMapb()
 	if err != nil {
 		return err

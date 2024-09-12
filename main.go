@@ -1,22 +1,31 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"pokedex/commands"
 	"strings"
 )
 
 func main() {
-	var input string
 	cmds := commands.GetCommands()
+
+	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
-		fmt.Scanln(&input)
-		parsedInput := strings.Split(input, " ")
-		command := strings.ToLower(parsedInput[0])
+
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Printf("Error:\n%v\n", err)
+		}
+		input = strings.ReplaceAll(input, "\n", "")
+		args := strings.Split(input, " ")
+
+		command := args[0]
 		c, ok := cmds[command]
 		if ok {
-			err := c.Callback()
+			err := c.Callback(args[1:]...)
 			if err != nil {
 				fmt.Printf("**Err**\n%v\n**End**\n", err)
 			}

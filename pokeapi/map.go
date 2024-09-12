@@ -6,38 +6,13 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"pokedex/internal/pokecache"
-	"time"
 )
 
-type MapStepper struct {
-	Count int
-	Next  *string
-	Prev  *string
-	cache pokecache.Cache
-}
-
-type LocationArea struct {
-	Name string
-	Url  string
-}
-
-type locationAreaResponse struct {
-	Count    int            `json:"count"`
-	Next     *string        `json:"next"`
-	Previous *string        `json:"previous"`
-	Results  []LocationArea `json:"results"`
-}
-
-var startURL string = "https://pokeapi.co/api/v2/location-area"
-
 func NewMapStepper() *MapStepper {
-	cacheDuration, _ := time.ParseDuration("5m")
 	c := MapStepper{
 		Count: 0,
-		Next:  &startURL,
-		Prev:  &startURL,
-		cache: *pokecache.NewCache(cacheDuration),
+		Next:  &Urls.Location,
+		Prev:  &Urls.Location,
 	}
 	return &c
 }
@@ -46,7 +21,7 @@ func (s *MapStepper) GetMap() ([]LocationArea, error) {
 	if s.Next != nil {
 		return s.getLocationAreas(*s.Next)
 	} else {
-		return s.getLocationAreas(startURL)
+		return s.getLocationAreas(Urls.Location)
 	}
 }
 
@@ -54,12 +29,12 @@ func (s *MapStepper) GetMapb() ([]LocationArea, error) {
 	if s.Prev != nil {
 		return s.getLocationAreas(*s.Prev)
 	} else {
-		return s.getLocationAreas(startURL)
+		return s.getLocationAreas(Urls.Location)
 	}
 }
 
 func (s *MapStepper) getLocationAreas(url string) ([]LocationArea, error) {
-	body, ok := s.cache.Get(url)
+	body, ok := ApiCache.Get(url)
 	if !ok {
 		res, err := http.Get(url)
 		if err != nil {
@@ -74,10 +49,10 @@ func (s *MapStepper) getLocationAreas(url string) ([]LocationArea, error) {
 		if err != nil {
 			return nil, err
 		}
-		s.cache.Add(url, body)
+		ApiCache.Add(url, body)
 	}
 
-	var areas locationAreaResponse
+	var areas allLocationAreaResponse
 	json.Unmarshal(body, &areas)
 	s.Count = areas.Count
 	s.Next = areas.Next
