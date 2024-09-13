@@ -29,7 +29,7 @@ func commandCatch(args ...string) error {
 
 	if rand.Intn(100) > pokeProb(pokemon) {
 		fmt.Printf("%v was caught\n", pokemon.Name)
-		UserState.CaughtPokeon = append(UserState.CaughtPokeon, pokemon)
+		UserState.CaughtPokemon = append(UserState.CaughtPokemon, pokemon)
 	} else {
 		fmt.Printf("%v escaped\n", pokemon.Name)
 	}
@@ -38,7 +38,7 @@ func commandCatch(args ...string) error {
 }
 
 func pokeProb(p pokeapi.Pokemon) int {
-	return int(100.0 * math.Tanh(float64(p.BaseExperience)/ 100.0))
+	return int(100.0 * math.Tanh(float64(p.BaseExperience)/100.0))
 }
 
 func canSee(name string) bool {

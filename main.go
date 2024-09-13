@@ -11,7 +11,7 @@ import (
 func main() {
 	cmds := commands.GetCommands()
 
-	//	debugRun(cmds)
+	// debugRun(cmds)
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -44,6 +44,10 @@ func debugRun(cmds map[string]commands.CliCommand) {
 	testArgs := [][]string{
 		{"explore", "canalave-city-area"},
 		{"catch", "tentacool"},
+		{"catch", "tentacool"},
+		{"catch", "tentacool"},
+		{"catch", "tentacool"},
+		{"inspect", "tentacool"},
 		{"exit"},
 	}
 

@@ -43,15 +43,28 @@ type Ability struct {
 	Ability  Location `json:"ability"`
 }
 
+type PokemonStat struct {
+	BaseStat int      `json:"base_stat"`
+	Effort   int      `json:"effort"`
+	Stat     Location `json:"stat"`
+}
+
+type PokemonType struct {
+	Slot int      `json:"slot"`
+	Type Location `json:"type"`
+}
+
 type Pokemon struct {
-	Id             int        `json:"id"`
-	Name           string     `json:"name"`
-	BaseExperience int        `json:"base_experience"`
-	Height         int        `json:"height"`
-	IsDefault      bool       `json:"is_default"`
-	Order          int        `json:"order"`
-	Weight         int        `json:"weight"`
-	Abilities      []Ability  `json:"abilities"`
-	Forms          []Location `json:"forms"`
+	Id             int           `json:"id"`
+	Name           string        `json:"name"`
+	BaseExperience int           `json:"base_experience"`
+	Height         int           `json:"height"`
+	IsDefault      bool          `json:"is_default"`
+	Order          int           `json:"order"`
+	Weight         int           `json:"weight"`
+	Abilities      []Ability     `json:"abilities"`
+	Forms          []Location    `json:"forms"`
+	Stats          []PokemonStat `json:"stats"`
+	Types          []PokemonType `json:"types"`
 	// TODO: Finish adding pokemon
 }

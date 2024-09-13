@@ -4,9 +4,9 @@ import "pokedex/pokeapi"
  
 
 type Pokedex struct {
-	CaughtPokeon []pokeapi.Pokemon
+	CaughtPokemon []pokeapi.Pokemon
 }
 
 var UserState = Pokedex {
-	CaughtPokeon: make([]pokeapi.Pokemon, 10),
+	CaughtPokemon: make([]pokeapi.Pokemon, 10),
 }
