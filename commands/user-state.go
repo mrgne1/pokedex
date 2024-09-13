@@ -8,5 +8,5 @@ type Pokedex struct {
 }
 
 var UserState = Pokedex {
-	CaughtPokemon: make([]pokeapi.Pokemon, 10),
+	CaughtPokemon: make([]pokeapi.Pokemon, 0),
 }

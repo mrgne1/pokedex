@@ -47,7 +47,15 @@ func debugRun(cmds map[string]commands.CliCommand) {
 		{"catch", "tentacool"},
 		{"catch", "tentacool"},
 		{"catch", "tentacool"},
-		{"inspect", "tentacool"},
+		{"catch", "pelipper"},
+		{"catch", "pelipper"},
+		{"catch", "pelipper"},
+		{"catch", "pelipper"},
+		{"catch", "pelipper"},
+		{"catch", "pelipper"},
+		{"catch", "pelipper"},
+		{"catch", "pelipper"},
+		{"pokedex"},
 		{"exit"},
 	}
 
