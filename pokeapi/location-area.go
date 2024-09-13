@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func Explore(area string) ([]Pokemon, error) {
+func Explore(area string) ([]PokemonLocation, error) {
 	url := fmt.Sprintf("%v/%v", Urls.Location, area)
 	body, ok := ApiCache.Get(url)
 	if !ok {
@@ -29,7 +29,7 @@ func Explore(area string) ([]Pokemon, error) {
 		return nil, err
 	}
 
-	var pokemon []Pokemon
+	var pokemon []PokemonLocation
 	for _, enc := range areaResponse.PokemonEncounters {
 		pokemon = append(pokemon, enc.Pokemon)
 	}

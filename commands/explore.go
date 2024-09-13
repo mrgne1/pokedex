@@ -22,6 +22,8 @@ func commandExplore(args ...string) error {
 		return err
 	}
 
+	mapStepper.VisiblePokemon = pokemon
+
 	fmt.Println("Found Pokemon:")
 	for _, poke := range pokemon {
 		fmt.Printf(" - %v\n", poke.Name)

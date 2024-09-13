@@ -10,14 +10,16 @@ import (
 
 func NewMapStepper() *MapStepper {
 	c := MapStepper{
-		Count: 0,
-		Next:  &Urls.Location,
-		Prev:  &Urls.Location,
+		Count:          0,
+		Next:           &Urls.Location,
+		Prev:           &Urls.Location,
+		Current:        make([]Location, 10),
+		VisiblePokemon: make([]PokemonLocation, 10),
 	}
 	return &c
 }
 
-func (s *MapStepper) GetMap() ([]LocationArea, error) {
+func (s *MapStepper) GetMap() ([]Location, error) {
 	if s.Next != nil {
 		return s.getLocationAreas(*s.Next)
 	} else {
@@ -25,7 +27,7 @@ func (s *MapStepper) GetMap() ([]LocationArea, error) {
 	}
 }
 
-func (s *MapStepper) GetMapb() ([]LocationArea, error) {
+func (s *MapStepper) GetMapb() ([]Location, error) {
 	if s.Prev != nil {
 		return s.getLocationAreas(*s.Prev)
 	} else {
@@ -33,7 +35,7 @@ func (s *MapStepper) GetMapb() ([]LocationArea, error) {
 	}
 }
 
-func (s *MapStepper) getLocationAreas(url string) ([]LocationArea, error) {
+func (s *MapStepper) getLocationAreas(url string) ([]Location, error) {
 	body, ok := ApiCache.Get(url)
 	if !ok {
 		res, err := http.Get(url)
@@ -57,6 +59,7 @@ func (s *MapStepper) getLocationAreas(url string) ([]LocationArea, error) {
 	s.Count = areas.Count
 	s.Next = areas.Next
 	s.Prev = areas.Previous
+	s.Current = areas.Results
 
 	return areas.Results, nil
 }
